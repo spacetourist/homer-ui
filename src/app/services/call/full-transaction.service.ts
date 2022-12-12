@@ -110,7 +110,7 @@ export class FullTransactionService {
                 let getAgentCustomType: any = this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query });
                 // todo consider additional checks that confirm we have the data, initially expect the server to return 404 when not found
                 console.log('agent response', getAgentCustomType.status, 'data', getAgentCustomType.data);
-                if (getAgentCustomType.status == 200 && getAgentCustomType.data) {
+                if (getAgentCustomType.status == 200 && getAgentCustomType.data !== null) {
                   tData.agentCdr = getAgentCustomType;
                   return true; // halt iteration on first match
                 }
