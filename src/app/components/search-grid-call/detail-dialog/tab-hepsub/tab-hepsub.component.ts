@@ -12,6 +12,7 @@ import {
 import { Functions } from '@app/helpers/functions';
 import { MatTabGroup } from '@angular/material/tabs';
 import { AfterViewInit } from '@angular/core';
+// todo import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-tab-hepsub',
@@ -59,7 +60,13 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     subTabList = [];
     jsonData: any;
     _interval: any;
-    constructor(private cdr: ChangeDetectorRef) { }
+    constructor(
+      private cdr: ChangeDetectorRef,
+      // todo public translateService: TranslateService,
+      ) {
+      // todo translateService.addLangs(['en'])
+      // todo translateService.setDefaultLang('en')
+    }
     ngAfterViewInit() {
         setTimeout(() => {
             this.ready.emit({});
@@ -78,4 +85,19 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
             clearInterval(this._interval);
         }
     }
+
+  async getPcap() {
+
+      console.log('saving from data:', this.jsonData)
+    //
+    // const PREFIX = 'export_';
+    // const ext = { Pcap: '.pcap', SIPP: '.xml', Text: '.txt', Report: '.zip' };
+    //
+    // // todo use jsonData to build request and issue download POST
+    //
+    //
+    //
+    // const data = await this._ecs.postMessagesFile(this.getQuery(), type);
+    // Functions.saveToFile(data, PREFIX + this.id + '.pcap');
+  }
 }
