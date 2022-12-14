@@ -100,7 +100,18 @@ export class FullTransactionService {
           const hsData: any = await this.preferenceHepsubService.getAll().toPromise();
           if (agents && agents.data) {
             if (hsData) {
-              agents.data.some(agent => {
+
+              // const promises = agents.data.map(async agent => {
+              //   return await this.agentsubService.getHepsubElements({
+              //     uuid: agent.uuid,
+              //     type: agent.type,
+              //     data: query
+              //   }).toPromise()
+              // })
+              //
+              // const numFruits = await Promise.all(promises)
+
+              agents.data.some(async agent => {
                 /** if exist an agent on hepsub list */
                 typeRequest = agent.type;
 
@@ -108,7 +119,7 @@ export class FullTransactionService {
 
                 // perform sync lookup of the type data against each subscriber
                 console.log('seeking data from agent', agent.uuid, 'type', agent.type, 'query', query);
-                let getAgentCustomType: any = this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query });
+                let getAgentCustomType: any = await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
                 // todo consider additional checks that confirm we have the data, initially expect the server to return 404 when not found
                 console.log('agent response', getAgentCustomType.status, 'data', getAgentCustomType.data);
                 if (getAgentCustomType.status == 200 && getAgentCustomType.data !== null) {
