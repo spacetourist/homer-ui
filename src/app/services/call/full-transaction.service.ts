@@ -110,31 +110,41 @@ export class FullTransactionService {
               //   }).toPromise()
               // })
               //
-              // const numFruits = await Promise.all(promises)
+              // const allAgentResponses = await Promise.all(promises)
 
-              agents.data.some(async agent => {
-                /** if exist an agent on hepsub list */
-                typeRequest = agent.type;
+              // agents.data.some(async agent => {
+              //   /** if exist an agent on hepsub list */
+              //   typeRequest = agent.type;
+              //
+              //   // console.log({ mapping, protocol, query, agentSubList, hData, source_field, tData });
+              //
+              //   // perform sync lookup of the type data against each subscriber
+              //   console.log('seeking data from agent', agent.uuid, 'type', agent.type, 'query', query);
+              //   try {
+              //     let getAgentCustomType: any = await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
+              //     // todo consider additional checks that confirm we have the data, initially expect the server to return 404 when not found
+              //     console.log('agent response', getAgentCustomType.status, 'data', getAgentCustomType.data);
+              //     // console.log('agent response', ci.status, 'data', ci.data);
+              //     if (getAgentCustomType.status == 200 && getAgentCustomType.data !== null) {
+              //       tData.agentCdr = getAgentCustomType;
+              //       return true; // halt iteration on first match
+              //     }
+              //   } catch (err) {
+              //     console.log('CG failed to retrieve from', agent.uuid, 'trying next');
+              //   }
+              //   // try next agent/subscriber
+              //   return false;
+              // });
 
-                // console.log({ mapping, protocol, query, agentSubList, hData, source_field, tData });
+              // start again, collect all promises and wait for all responses
 
-                // perform sync lookup of the type data against each subscriber
-                console.log('seeking data from agent', agent.uuid, 'type', agent.type, 'query', query);
-                try {
-                  let getAgentCustomType: any = await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
-                  // todo consider additional checks that confirm we have the data, initially expect the server to return 404 when not found
-                  console.log('agent response', getAgentCustomType.status, 'data', getAgentCustomType.data);
-                  // console.log('agent response', ci.status, 'data', ci.data);
-                  if (getAgentCustomType.status == 200 && getAgentCustomType.data !== null) {
-                    tData.agentCdr = getAgentCustomType;
-                    return true; // halt iteration on first match
-                  }
-                } catch (err) {
-                  console.log('CG failed to retrieve from', agent.uuid, 'trying next');
-                }
-                // try next agent/subscriber
-                return false;
-              });
+              console.log('Start')
+              const allAgentPromises = agents.data.map(async agent => {
+                return await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
+              })
+              const allAgentResponses = await Promise.all(allAgentPromises)
+              console.log(allAgentResponses)
+              console.log('End')
             }
           }
         } catch (err) { onError('agentCdr'); }
