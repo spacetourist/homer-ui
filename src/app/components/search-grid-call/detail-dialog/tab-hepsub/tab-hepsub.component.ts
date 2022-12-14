@@ -9,6 +9,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef
 } from '@angular/core';
+import { AgentsubService } from '@app/services/agentsub.service';
 import { Functions } from '@app/helpers/functions';
 import { MatTabGroup } from '@angular/material/tabs';
 import { AfterViewInit } from '@angular/core';
@@ -42,6 +43,8 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
             agentCdr.data.data = Functions.JSON_parse(agentCdr.data.data) || agentCdr.data.data;
             this.jsonData = agentCdr.data;
+            this.agentNode = agentCdr.node;
+            this.agentUuid = agentCdr.uuid;
         }
 
         this.cdr.detectChanges();
@@ -59,9 +62,12 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     isLogs = true;
     subTabList = [];
     jsonData: any;
+    agentNode: string;
+    agentUuid: string;
     _interval: any;
     constructor(
       private cdr: ChangeDetectorRef,
+      private _ass: AgentsubService,
       // todo public translateService: TranslateService,
       ) {
       // todo translateService.addLangs(['en'])
@@ -87,17 +93,16 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
   async getPcap() {
+    console.log('saving from data:', this.jsonData)
 
-      console.log('saving from data:', this.jsonData)
-    //
-    // const PREFIX = 'export_';
-    // const ext = { Pcap: '.pcap', SIPP: '.xml', Text: '.txt', Report: '.zip' };
-    //
-    // // todo use jsonData to build request and issue download POST
-    //
-    //
-    //
-    // const data = await this._ecs.postMessagesFile(this.getQuery(), type);
-    // Functions.saveToFile(data, PREFIX + this.id + '.pcap');
+    const PREFIX = 'homer_';
+
+    const data = await this._ass.getHepsubElements({
+      uuid: this.agentUuid,
+      type: "download",
+      data: this.jsonData
+    });
+
+    Functions.saveToFile(data, PREFIX + this.id + '-rtp.pcap');
   }
 }
