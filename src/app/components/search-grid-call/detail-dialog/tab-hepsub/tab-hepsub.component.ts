@@ -106,7 +106,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
       uuid: this.agentUuid,
       type: "download",
       data: this.jsonData
-    });
+    }).toPromise();
 
     Functions.saveToFile(data, PREFIX + this.id + '-rtp.pcap');
   }
