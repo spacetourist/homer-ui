@@ -102,40 +102,6 @@ export class FullTransactionService {
           if (agents && agents.data) {
             if (hsData) {
 
-              // const promises = agents.data.map(async agent => {
-              //   return await this.agentsubService.getHepsubElements({
-              //     uuid: agent.uuid,
-              //     type: agent.type,
-              //     data: query
-              //   }).toPromise()
-              // })
-              //
-              // const allAgentResponses = await Promise.all(promises)
-
-              // agents.data.some(async agent => {
-              //   /** if exist an agent on hepsub list */
-              //   typeRequest = agent.type;
-              //
-              //   // console.log({ mapping, protocol, query, agentSubList, hData, source_field, tData });
-              //
-              //   // perform sync lookup of the type data against each subscriber
-              //   console.log('seeking data from agent', agent.uuid, 'type', agent.type, 'query', query);
-              //   try {
-              //     let getAgentCustomType: any = await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
-              //     // todo consider additional checks that confirm we have the data, initially expect the server to return 404 when not found
-              //     console.log('agent response', getAgentCustomType.status, 'data', getAgentCustomType.data);
-              //     // console.log('agent response', ci.status, 'data', ci.data);
-              //     if (getAgentCustomType.status == 200 && getAgentCustomType.data !== null) {
-              //       tData.agentCdr = getAgentCustomType;
-              //       return true; // halt iteration on first match
-              //     }
-              //   } catch (err) {
-              //     console.log('CG failed to retrieve from', agent.uuid, 'trying next');
-              //   }
-              //   // try next agent/subscriber
-              //   return false;
-              // });
-
               // start again, collect all promises and wait for all responses
 
               console.log('Start')
@@ -144,11 +110,10 @@ export class FullTransactionService {
               })
               const allAgentResponses = await Promise.all(allAgentPromises)
 
-              console.log(allAgentResponses)
-
-              console.log('CDR before', tData.agentCdr)
+              console.log('all agent responses', allAgentResponses)
 
               // todo we only expect one response, switch to some
+              // todo the QoS tab extracts the media addresses, consider using this to reduce to correct RTP instance
               allAgentResponses.forEach(
                 (agent: any) => {
                   if (agent.data) {
