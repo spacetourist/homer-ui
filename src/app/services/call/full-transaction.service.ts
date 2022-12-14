@@ -1,15 +1,16 @@
-import { AgentsubService } from '@app/services/agentsub.service';
-import { Injectable } from '@angular/core';
-import { CallReportService } from './report.service';
-import { CallTransactionService } from './transaction.service';
-import { Observable } from 'rxjs';
-import { HepLogService } from './hep-log.service';
-import { WorkerService } from '../worker.service';
-import { WorkerCommands } from '../../models/worker-commands.module';
-import { log, Functions } from '@app/helpers/functions';
-import { PreferenceHepsubService } from '../preferences';
-import { PreferenceAgentsubService } from '@app/services';
-import { DateTimeRangeService } from '@services/data-time-range.service';
+import {AgentsubService} from '@app/services/agentsub.service';
+import {Injectable} from '@angular/core';
+import {CallReportService} from './report.service';
+import {CallTransactionService} from './transaction.service';
+import {Observable} from 'rxjs';
+import {HepLogService} from './hep-log.service';
+import {WorkerService} from '../worker.service';
+import {WorkerCommands} from '../../models/worker-commands.module';
+import {Functions, log} from '@app/helpers/functions';
+import {PreferenceHepsubService} from '../preferences';
+import {PreferenceAgentsubService} from '@app/services';
+import {DateTimeRangeService} from '@services/data-time-range.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -119,12 +120,17 @@ export class FullTransactionService {
 
                 // perform sync lookup of the type data against each subscriber
                 console.log('seeking data from agent', agent.uuid, 'type', agent.type, 'query', query);
-                let getAgentCustomType: any = await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
-                // todo consider additional checks that confirm we have the data, initially expect the server to return 404 when not found
-                console.log('agent response', getAgentCustomType.status, 'data', getAgentCustomType.data);
-                if (getAgentCustomType.status == 200 && getAgentCustomType.data !== null) {
-                  tData.agentCdr = getAgentCustomType;
-                  return true; // halt iteration on first match
+                try {
+                  let getAgentCustomType: any = await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
+                  // todo consider additional checks that confirm we have the data, initially expect the server to return 404 when not found
+                  console.log('agent response', getAgentCustomType.status, 'data', getAgentCustomType.data);
+                  // console.log('agent response', ci.status, 'data', ci.data);
+                  if (getAgentCustomType.status == 200 && getAgentCustomType.data !== null) {
+                    tData.agentCdr = getAgentCustomType;
+                    return true; // halt iteration on first match
+                  }
+                } catch (err) {
+                  console.log('CG failed to retrieve from', agent.uuid, 'trying next');
                 }
                 // try next agent/subscriber
                 return false;
