@@ -152,7 +152,7 @@ export class FullTransactionService {
               allAgentResponses.forEach(
                 (agent: any) => {
                   if (agent.data) {
-                    tData.agentCdr = agent.data;
+                    tData.agentCdr = agent;
                   }
                 }
               )
