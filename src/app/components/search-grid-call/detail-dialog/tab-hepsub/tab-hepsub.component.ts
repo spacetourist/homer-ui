@@ -43,8 +43,11 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
             agentCdr.data.data = Functions.JSON_parse(agentCdr.data.data) || agentCdr.data.data;
             this.jsonData = agentCdr.data;
+            this.agentPathPcap = agentCdr.data.pcap;
             this.agentNode = agentCdr.node;
             this.agentUuid = agentCdr.uuid;
+            this.timestamp = new Date(agentCdr.data.t_sec * 1000).toUTCString();
+
         }
 
         this.cdr.detectChanges();
@@ -62,6 +65,8 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     isLogs = true;
     subTabList = [];
     jsonData: any;
+    timestamp: string; // PCAP timestamp
+    agentPathPcap: string;
     agentNode: string;
     agentUuid: string;
     _interval: any;

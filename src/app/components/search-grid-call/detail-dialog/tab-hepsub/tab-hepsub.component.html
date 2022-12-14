@@ -9,9 +9,15 @@
   <mat-tab *ngFor="let item of subTabList"
     [label]="'HEPSUB:' + item.title">
 
-    <ngx-json-viewer [json]="jsonData" [expanded]="true"></ngx-json-viewer>
+    <!-- display json -->
+    <!-- ngx-json-viewer [json]="jsonData" [expanded]="true"></ngx-json-viewer -->
 
     <div style="height:36px;margin:13px;">
+
+      <h3 style="">PCAP found for call ID: {{ callid }}</h3>
+      <h1 style="">Agent file path: {{ this.agentPathPcap }}</h1>
+      <h1 style="margin-bottom: 16px;">Date modified: {{ this.timestamp }}</h1>
+
       <button mat-raised-button
               class="setting-btn"
               (click)="getPcap()">
