@@ -24,7 +24,11 @@ export class AgentsubService {
         return this.http.get<PreferenceAgentsub>(`${this.url}/fields`);
     }
     /**
-    *
+     * Perform lookup for data type against HEPSUB subscriber UUID
+     *
+     * i.e.
+     *  search:   http://192.168.181.241:9080/api/v3/agent/search/06a96780-7739-11ed-91e0-fbabc1036a33/pcap
+     *  download: http://192.168.181.241:9080/api/v3/agent/search/06a96780-7739-11ed-91e0-fbabc1036a33/download
      */
     getHepsubElements({ uuid, type, data }): Observable<any> {
         return this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data);

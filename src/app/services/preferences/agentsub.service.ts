@@ -22,6 +22,7 @@ export class PreferenceAgentsubService {
     getToken() {
         return this.authService.currentUserValue.token;
     }
+
     // get the token from headers of agent
     // get all agents
     getHepsubElements({ uuid, type, data }): Observable<any> {
