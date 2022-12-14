@@ -143,7 +143,21 @@ export class FullTransactionService {
                 return await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
               })
               const allAgentResponses = await Promise.all(allAgentPromises)
+
               console.log(allAgentResponses)
+
+              console.log('CDR before', tData.agentCdr)
+
+              // todo we only expect one response, switch to some
+              allAgentResponses.forEach(
+                (agent: any) => {
+                  if (agent.data) {
+                    tData.agentCdr = agent.data;
+                  }
+                }
+              )
+
+              console.log('CDR after', tData.agentCdr)
               console.log('End')
             }
           }
