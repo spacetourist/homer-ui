@@ -27,6 +27,7 @@ export class FullTransactionService {
   ) { }
 
   public getTransactionData(requestTransaction, dateFormat): Observable<any> {
+    console.log('CG testing A');
     const _worker = async data => await WorkerService.doOnce(WorkerCommands.TRANSACTION_SERVICE_FULL, data);
     return new Observable<any>(observer => {
       let tData;
