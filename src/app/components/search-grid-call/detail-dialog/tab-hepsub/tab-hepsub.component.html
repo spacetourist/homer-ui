@@ -11,13 +11,15 @@
 
     <ngx-json-viewer [json]="jsonData" [expanded]="true"></ngx-json-viewer>
 
-    <button mat-raised-button
-            class="setting-btn"
-            (click)="getPcap()">
-      <fa-icon icon="download"></fa-icon>
-      <!-- {{'tabExport.exportPCAP'|translate}} -->
-      Download RTP PCAP
-    </button>
+    <div style="height:36px;margin:13px;">
+      <button mat-raised-button
+              class="setting-btn"
+              (click)="getPcap()">
+        <fa-icon icon="download"></fa-icon>
+        <!-- {{'tabExport.exportPCAP'|translate}} -->
+        Download RTP PCAP
+      </button>
+    </div>
   </mat-tab>
 
 
