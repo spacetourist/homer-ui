@@ -146,6 +146,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
               ['callid']: [this.callid], // possibly not needed
               ['sid']: [this.callid], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
               ['source_ip']: ["1.1.1.1"], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
+              ['pcap']: [this.agentPathPcap], // needed for download (could just load at remote..)
               ['__hep__']: [this.jsonData[this.callid].__hep__], // provide token and filename needed for download
             }
           },
