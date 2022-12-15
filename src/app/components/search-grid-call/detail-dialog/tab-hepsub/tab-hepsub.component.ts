@@ -1,18 +1,19 @@
 import {
-    Component,
-    OnInit,
-    Input,
-    Output,
-    EventEmitter,
-    ViewChild,
-    OnDestroy,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
 } from '@angular/core';
-import { AgentsubService } from '@app/services/agentsub.service';
-import { Functions } from '@app/helpers/functions';
-import { MatTabGroup } from '@angular/material/tabs';
-import { AfterViewInit } from '@angular/core';
+import {AgentsubService} from '@app/services/agentsub.service';
+import {Functions} from '@app/helpers/functions';
+import {MatTabGroup} from '@angular/material/tabs';
+
 // todo import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -37,16 +38,22 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
         const { agentCdr } = this._dataItem.data;
 
         if (agentCdr) {
-            this.subTabList.push({
-                title: agentCdr.node
-            });
+          this.subTabList.push({
+              title: agentCdr.node
+          });
 
-            agentCdr.data.data = Functions.JSON_parse(agentCdr.data.data) || agentCdr.data.data;
-            this.jsonData = agentCdr.data;
-            this.agentPathPcap = agentCdr.data.pcap;
-            this.agentNode = agentCdr.node;
-            this.agentUuid = agentCdr.uuid;
-            this.timestamp = new Date(agentCdr.data.t_sec * 1000).toUTCString();
+          console.log('TabHepsubComponent dataItem - agentCdr:', agentCdr)
+
+          // todo do we need this sub data object?
+          agentCdr.data.data = Functions.JSON_parse(agentCdr.data) || agentCdr.data;
+
+          this.jsonData = agentCdr.data;
+          this.agentNode = agentCdr.node;
+          this.agentUuid = agentCdr.uuid;
+
+          // todo testing - dig deeper, maybe parse helps access?
+          this.agentPathPcap = this.jsonData.data.pcap;
+          this.timestamp = new Date(this.jsonData.data.t_sec * 1000).toUTCString();
 
         }
 
@@ -102,12 +109,42 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const PREFIX = 'homer_';
 
+    const request = this.getRequest(this.jsonData.cid, this.jsonData.t_sec)
+
     const data = await this._ass.getHepsubElements({
       uuid: this.agentUuid,
       type: "download",
-      data: this.jsonData
+      data: request, //this.jsonData
     }).toPromise();
 
     Functions.saveToFile(data, PREFIX + this.id + '-rtp.pcap');
+  }
+
+  private getRequest(callid, timestamp_s) {
+    const timestamp_ms = timestamp_s * 1000;
+
+    return {
+        param: {
+          location: {node: ["local"]}, // todo might be better as node name? copied from pcap search query
+          search: {
+            ['1_call']: { // todo hardcoded
+              id: 0, // todo we don't have this ID here - where is it from?
+              ['callid']: [callid],
+              // ['sid']: [callid], todo maybe this is automatically copied in?
+              // uuid: [],
+            }
+          },
+          transaction: {
+            call: true,
+            registration: false,
+            rest: false,
+          }
+        },
+        timestamp: { // todo these not really used, just implementing for testing
+          from: timestamp_ms,
+          to: timestamp_ms,
+        }
+      };
+
   }
 }
