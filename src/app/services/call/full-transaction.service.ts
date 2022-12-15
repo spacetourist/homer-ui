@@ -57,7 +57,6 @@ export class FullTransactionService {
         });
       });
       const rt = requestTransaction;
-      let typeRequest = 'cdr';
       this.callTransactionService.getTransaction(rt).toPromise().then(async (data) => {
         data.dateFormat = dateFormat;
         data.timeZone = this.dateTimeRangeService.getTimezoneForQuery();
@@ -104,7 +103,7 @@ export class FullTransactionService {
 
               // start again, collect all promises and wait for all responses
 
-              console.log('Start')
+              console.log('Start query', query)
               const allAgentPromises = agents.data.map(async agent => {
                 return await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
               })
