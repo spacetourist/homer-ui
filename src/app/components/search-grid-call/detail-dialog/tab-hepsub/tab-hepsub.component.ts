@@ -98,7 +98,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
   async getPcap() {
-    console.log('saving from data:', this.jsonData)
+    console.log('pcap download request:', this.jsonData)
 
     const PREFIX = 'homer_';
 
