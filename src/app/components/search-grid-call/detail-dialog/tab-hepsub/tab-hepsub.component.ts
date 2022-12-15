@@ -139,10 +139,10 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
           search: {
             ['1_call']: {
               id: 0, // todo we don't have this ID here - where is it from?
-              ['callid']: [this.callid],
+              ['callid']: [this.callid], // possibly not needed
               ['sid']: [this.callid], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
               ['source_ip']: ["1.1.1.1"], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
-              ['srcIp']: ["2.2.2.2"], // not clear which it uses, add values to test
+              ['__hep__']: this.jsonData[this.callid].__hep__, // provide token and filename needed for download
             }
           },
           transaction: {
