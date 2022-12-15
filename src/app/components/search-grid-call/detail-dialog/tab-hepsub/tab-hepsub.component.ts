@@ -97,19 +97,6 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
       // todo translateService.addLangs(['en'])
       // todo translateService.setDefaultLang('en')
 
-      console.log('TabHepsubComponent constructor - jsonData:', this.jsonData)
-      console.log('TabHepsubComponent constructor - jsonData[callid]:', this.jsonData[this.callid])
-      console.log('TabHepsubComponent constructor - callid:', this.callid)
-      console.log('TabHepsubComponent constructor - id:', this.id)
-      console.log('TabHepsubComponent constructor - jsonData[0]:', this.jsonData[0])
-
-      this.agentPathPcap = this.jsonData[this.callid].pcap || 'not_set';
-      this.timestamp = this.jsonData[this.callid].t_sec * 1000 || 0;
-      this.timestampString = new Date(this.timestamp ).toUTCString();
-
-      console.log('TabHepsubComponent constructor - agentPathPcap:', this.agentPathPcap)
-      console.log('TabHepsubComponent constructor - timestamp:', this.timestamp)
-      console.log('TabHepsubComponent constructor - timestampString:', this.timestampString)
 
     }
     ngAfterViewInit() {
@@ -123,6 +110,21 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
             this.matTabGroup.realignInkBar();
             this.cdr.detectChanges();
         }, 2000);
+
+      console.log('TabHepsubComponent ngOnInit - jsonData:', this.jsonData)
+      console.log('TabHepsubComponent ngOnInit - jsonData[callid]:', this.jsonData[this.callid])
+      console.log('TabHepsubComponent ngOnInit - callid:', this.callid)
+      console.log('TabHepsubComponent ngOnInit - id:', this.id)
+      console.log('TabHepsubComponent ngOnInit - jsonData[0]:', this.jsonData[0])
+
+      this.agentPathPcap = this.jsonData[this.callid].pcap || 'not_set';
+      this.timestamp = this.jsonData[this.callid].t_sec * 1000 || 0;
+      this.timestampString = new Date(this.timestamp ).toUTCString();
+
+      console.log('TabHepsubComponent ngOnInit - agentPathPcap:', this.agentPathPcap)
+      console.log('TabHepsubComponent ngOnInit - timestamp:', this.timestamp)
+      console.log('TabHepsubComponent ngOnInit - timestampString:', this.timestampString)
+
     }
 
     ngOnDestroy() {
