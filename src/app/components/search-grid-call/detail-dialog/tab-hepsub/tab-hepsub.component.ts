@@ -47,13 +47,13 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
           // todo do we need this sub data object?
           agentCdr.data.data = Functions.JSON_parse(agentCdr.data) || agentCdr.data;
 
-          this.jsonData = agentCdr.data;
+          this.jsonData = agentCdr[this.callid];
           this.agentNode = agentCdr.node;
           this.agentUuid = agentCdr.uuid;
 
           // todo testing - dig deeper, maybe parse helps access?
-          this.agentPathPcap = this.jsonData.data.pcap;
-          this.timestamp = new Date(this.jsonData.data.t_sec * 1000).toUTCString();
+          this.agentPathPcap = agentCdr[this.callid].pcap || 'not_set';
+          this.timestamp = new Date((agentCdr[this.callid].t_sec || 0) * 1000).toUTCString();
 
         }
 
