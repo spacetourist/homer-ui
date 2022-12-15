@@ -117,11 +117,13 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
   async getPcap() {
-    console.log('pcap download request:', this.jsonData)
+    console.log('pcap download request, jsonData:', this.jsonData)
 
-    const PREFIX = 'homer_';
+    const PREFIX = 'homer_rtp_';
 
     const request = this.getRequest()
+
+    console.log('pcap download request, request:', request)
 
     const data = await this._ass.getHepsubElements({
       uuid: this.agentUuid,
@@ -129,7 +131,9 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
       data: request, //this.jsonData
     }).toPromise();
 
-    Functions.saveToFile(data, PREFIX + this.id + '-rtp.pcap');
+    console.log('pcap download request, response:', data)
+
+    Functions.saveToFile(data, PREFIX + this.id + '.pcap');
   }
 
   private getRequest() {
@@ -142,7 +146,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
               ['callid']: [this.callid], // possibly not needed
               ['sid']: [this.callid], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
               ['source_ip']: ["1.1.1.1"], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
-              ['__hep__']: this.jsonData[this.callid].__hep__, // provide token and filename needed for download
+              ['__hep__']: [this.jsonData[this.callid].__hep__], // provide token and filename needed for download
             }
           },
           transaction: {
