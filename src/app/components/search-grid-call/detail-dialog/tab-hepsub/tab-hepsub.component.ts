@@ -47,7 +47,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
           // todo do we need this sub data object?
           agentCdr.data.data = Functions.JSON_parse(agentCdr.data) || agentCdr.data;
 
-          this.jsonData = agentCdr.data[this.callid];
+          this.jsonData = agentCdr.data.data[this.callid];
           this.agentNode = agentCdr.node;
           this.agentUuid = agentCdr.uuid;
 
