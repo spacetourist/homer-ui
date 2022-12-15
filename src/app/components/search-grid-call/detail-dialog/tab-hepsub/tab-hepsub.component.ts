@@ -51,21 +51,11 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log('TabHepsubComponent dataItem - agentCdr.data:', agentCdr.data)
           console.log('TabHepsubComponent dataItem - agentCdr.data.data:', agentCdr.data.data)
 
-          //this.jsonData = agentCdr.data.data[this.callid];
           this.jsonData = agentCdr.data;
+
+          // extract agent node information
           this.agentNode = agentCdr.node;
           this.agentUuid = agentCdr.uuid;
-
-          console.log('TabHepsubComponent dataItem - jsonData:', this.jsonData)
-          console.log('TabHepsubComponent dataItem - jsonData[callid]:', this.jsonData[this.callid])
-          console.log('TabHepsubComponent dataItem - callid:', this.callid)
-          console.log('TabHepsubComponent dataItem - id:', this.id)
-          console.log('TabHepsubComponent dataItem - jsonData[0]:', this.jsonData[0])
-
-          // todo testing - dig deeper, maybe parse helps access?
-          // this.agentPathPcap = this.jsonData[this.callid].pcap || 'not_set';
-          // this.timestamp = this.jsonData[this.callid].t_sec * 1000 || 0;
-          // this.timestampString = new Date(this.timestamp ).toUTCString();
         }
 
         this.cdr.detectChanges();
@@ -112,19 +102,12 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 2000);
 
       console.log('TabHepsubComponent ngOnInit - jsonData:', this.jsonData)
-      console.log('TabHepsubComponent ngOnInit - jsonData[callid]:', this.jsonData[this.callid])
-      console.log('TabHepsubComponent ngOnInit - callid:', this.callid)
-      console.log('TabHepsubComponent ngOnInit - id:', this.id)
-      console.log('TabHepsubComponent ngOnInit - jsonData[0]:', this.jsonData[0])
 
       this.agentPathPcap = this.jsonData[this.callid].pcap || 'not_set';
       this.timestamp = this.jsonData[this.callid].t_sec * 1000 || 0;
       this.timestampString = new Date(this.timestamp ).toUTCString();
 
-      console.log('TabHepsubComponent ngOnInit - agentPathPcap:', this.agentPathPcap)
-      console.log('TabHepsubComponent ngOnInit - timestamp:', this.timestamp)
-      console.log('TabHepsubComponent ngOnInit - timestampString:', this.timestampString)
-
+      console.log('TabHepsubComponent ngOnInit - agentPathPcap:', this.agentPathPcap, 'timestamp:', this.timestamp, 'timestampString:', this.timestampString)
     }
 
     ngOnDestroy() {
@@ -138,7 +121,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const PREFIX = 'homer_';
 
-    const request = this.getRequest(this.jsonData.cid, this.jsonData.t_sec)
+    const request = this.getRequest(this.callid, this.timestamp)
 
     const data = await this._ass.getHepsubElements({
       uuid: this.agentUuid,
