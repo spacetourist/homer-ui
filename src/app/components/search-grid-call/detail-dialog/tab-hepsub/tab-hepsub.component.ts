@@ -121,7 +121,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const PREFIX = 'homer_';
 
-    const request = this.getRequest(this.callid, this.timestamp)
+    const request = this.getRequest()
 
     const data = await this._ass.getHepsubElements({
       uuid: this.agentUuid,
@@ -132,16 +132,17 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     Functions.saveToFile(data, PREFIX + this.id + '-rtp.pcap');
   }
 
-  private getRequest(callid, timestamp_ms) {
+  private getRequest() {
     return {
         param: {
           location: {node: ["local"]}, // todo might be better as node name? copied from pcap search query
           search: {
-            ['1_call']: { // todo hardcoded
+            ['1_call']: {
               id: 0, // todo we don't have this ID here - where is it from?
-              ['callid']: [callid],
-              // ['sid']: [callid], todo maybe this is automatically copied in?
-              // uuid: [],
+              ['callid']: [this.callid],
+              ['sid']: [this.callid], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
+              ['source_ip']: ["1.1.1.1"], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
+              ['srcIp']: ["2.2.2.2"], // not clear which it uses, add values to test
             }
           },
           transaction: {
@@ -151,8 +152,8 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         },
         timestamp: { // todo these not really used, just implementing for testing
-          from: timestamp_ms,
-          to: timestamp_ms,
+          from: this.timestamp,
+          to: this.timestamp,
         }
       };
 
