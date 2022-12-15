@@ -47,14 +47,14 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
           // todo do we need this sub data object?
           agentCdr.data.data = Functions.JSON_parse(agentCdr.data) || agentCdr.data;
 
-          this.jsonData = agentCdr[this.callid];
+          this.jsonData = agentCdr.data[this.callid];
           this.agentNode = agentCdr.node;
           this.agentUuid = agentCdr.uuid;
 
           // todo testing - dig deeper, maybe parse helps access?
-          this.agentPathPcap = agentCdr[this.callid].pcap || 'not_set';
-          this.timestamp = new Date((agentCdr[this.callid].t_sec || 0) * 1000).toUTCString();
-
+          this.agentPathPcap = this.jsonData.pcap || 'not_set';
+          this.timestamp = this.jsonData.t_sec * 1000 || 0;
+          this.timestampString = new Date(this.timestamp ).toUTCString();
         }
 
         this.cdr.detectChanges();
@@ -72,7 +72,8 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     isLogs = true;
     subTabList = [];
     jsonData: any;
-    timestamp: string; // PCAP timestamp
+    timestamp: any; // PCAP timestamp
+    timestampString: string; // PCAP timestamp
     agentPathPcap: string;
     agentNode: string;
     agentUuid: string;
@@ -120,9 +121,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     Functions.saveToFile(data, PREFIX + this.id + '-rtp.pcap');
   }
 
-  private getRequest(callid, timestamp_s) {
-    const timestamp_ms = timestamp_s * 1000;
-
+  private getRequest(callid, timestamp_ms) {
     return {
         param: {
           location: {node: ["local"]}, // todo might be better as node name? copied from pcap search query
