@@ -46,7 +46,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
           // todo do we need this sub data object?
           //agentCdr.data.data = Functions.JSON_parse(agentCdr.data) || agentCdr.data;
-          agentCdr.data.data = Functions.JSON_parse(agentCdr.data.data) || agentCdr.data.data;
+          agentCdr.data.data = Functions.JSON_parse(agentCdr.data) || agentCdr.data;
 
           console.log('TabHepsubComponent dataItem - agentCdr.data:', agentCdr.data)
           console.log('TabHepsubComponent dataItem - agentCdr.data.data:', agentCdr.data.data)
@@ -58,6 +58,8 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
           console.log('TabHepsubComponent dataItem - jsonData:', this.jsonData)
           console.log('TabHepsubComponent dataItem - jsonData[callid]:', this.jsonData[this.callid])
+          console.log('TabHepsubComponent dataItem - callid:', this.callid)
+          console.log('TabHepsubComponent dataItem - id:', this.id)
           console.log('TabHepsubComponent dataItem - jsonData[0]:', this.jsonData[0])
 
           // todo testing - dig deeper, maybe parse helps access?
