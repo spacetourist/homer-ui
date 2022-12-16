@@ -265,8 +265,7 @@ export class Functions {
     return new Date(data * 1000).toISOString().substr(11, 8);
   }
   // getTimestamp produces a timestamp in format YYYYMMDDHHMMSS
-  static getTimestamp(): string {
-    const date = new Date();
+  static getTimestamp(date: Date = new Date()): string {
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();

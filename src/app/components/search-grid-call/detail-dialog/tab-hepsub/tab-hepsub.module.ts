@@ -39,7 +39,9 @@ import { far } from '@fortawesome/free-regular-svg-icons';
   exports: [TabHepsubComponent]
 })
 export class TabHepsubModule {
-  constructor(library: FaIconLibrary,     public translateService: TranslateService,
+  constructor(
+    library: FaIconLibrary,
+    public translateService: TranslateService,
   ) {
     library.addIconPacks(fas as any, fab as any, far as any);
     translateService.addLangs(['en'])

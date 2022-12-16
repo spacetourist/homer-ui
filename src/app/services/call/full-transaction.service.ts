@@ -1,15 +1,15 @@
-import {AgentsubService} from '@app/services/agentsub.service';
-import {Injectable} from '@angular/core';
-import {CallReportService} from './report.service';
-import {CallTransactionService} from './transaction.service';
-import {Observable} from 'rxjs';
-import {HepLogService} from './hep-log.service';
-import {WorkerService} from '../worker.service';
-import {WorkerCommands} from '../../models/worker-commands.module';
-import {Functions, log} from '@app/helpers/functions';
-import {PreferenceHepsubService} from '../preferences';
-import {PreferenceAgentsubService} from '@app/services';
-import {DateTimeRangeService} from '@services/data-time-range.service';
+import { AgentsubService } from '@app/services/agentsub.service';
+import { Injectable } from '@angular/core';
+import { CallReportService } from '@app/services';
+import { CallTransactionService } from '@app/services';
+import { Observable } from 'rxjs';
+import { HepLogService } from '@app/services';
+import { WorkerService } from '../worker.service';
+import { WorkerCommands } from '@app/models/worker-commands.module';
+import { Functions, log } from '@app/helpers/functions';
+import { PreferenceHepsubService } from '@app/services';
+import { PreferenceAgentsubService } from '@app/services';
+import { DateTimeRangeService } from '@services/data-time-range.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,6 @@ export class FullTransactionService {
     private preferenceHepsubService: PreferenceHepsubService,
     private _pass: PreferenceAgentsubService,
     private dateTimeRangeService: DateTimeRangeService
-
   ) { }
 
   public getTransactionData(requestTransaction, dateFormat): Observable<any> {
@@ -100,19 +99,12 @@ export class FullTransactionService {
           const hsData: any = await this.preferenceHepsubService.getAll().toPromise();
           if (agents && agents.data) {
             if (hsData) {
-
-              // start again, collect all promises and wait for all responses
-
-              console.log('Start query', query)
+              // collect all promises and wait for all responses
               const allAgentPromises = agents.data.map(async agent => {
                 return await this.agentsubService.getHepsubElements({ uuid: agent.uuid, type: agent.type, data: query }).toPromise();
               })
               const allAgentResponses = await Promise.all(allAgentPromises)
-
-              console.log('all agent responses', allAgentResponses)
-
-              // todo we only expect one response, switch to some
-              // todo the QoS tab extracts the media addresses, consider using this to reduce to correct RTP instance
+              // check for data in any of the responses, if we get data back capture into model
               allAgentResponses.forEach(
                 (agent: any) => {
                   if (agent.data) {
@@ -120,9 +112,6 @@ export class FullTransactionService {
                   }
                 }
               )
-
-              console.log('CDR after', tData.agentCdr)
-              console.log('End')
             }
           }
         } catch (err) { onError('agentCdr'); }
@@ -133,7 +122,6 @@ export class FullTransactionService {
           tData.heplogs = hepLogRes.data;
         } catch (err) { onError('heplogs'); }
 
-
         try {
           const callIdArr = tData?.data?.calldata.map(i => i.sid).sort().filter((i, k, a) => i !== a[k - 1]) || [];
           Object.values(rt.param.search).forEach((i: any) => i.callid = callIdArr);
@@ -142,7 +130,6 @@ export class FullTransactionService {
           tData.qosData = qosData;
         } catch (err) { onError('qos'); }
         ready('qos');
-
 
       }, onError('transaction'));
     });

@@ -25,19 +25,9 @@ export class AgentsubService {
     return this.http.get<PreferenceAgentsub>(`${this.url}/fields`);
   }
 
-  /**
-   * Perform lookup for data type against HEPSUB subscriber UUID
-   *
-   * i.e.
-   *  search:   http://192.168.181.241:9080/api/v3/agent/search/06a96780-7739-11ed-91e0-fbabc1036a33/pcap
-   *  download: http://192.168.181.241:9080/api/v3/agent/search/06a96780-7739-11ed-91e0-fbabc1036a33/download
-   */
+  // perform lookup for data type against HEPSUB subscriber UUID, if type is download file data will be returned
   getHepsubElements({uuid, type, data}): Observable<any> {
-    // todo consider returning .toPromise() as per call.service
-    let options;
-    if (type === 'download') {
-      options = {responseType: 'blob' as 'json'};
-    }
+    let options = type === 'download' ? {responseType: 'blob' as 'json'} : undefined;
     return this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data, options);
   }
 
@@ -54,7 +44,6 @@ export class AgentsubService {
      * [domain:port-1]/api/v3/agent/type/cdr
      */
     return this.http.get(`${this.url}/type/${type}`);
-
   }
 
   getData(agent: any, type?: string): Observable<any> {

@@ -10,12 +10,9 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {AgentsubService} from '@app/services/agentsub.service';
-import {Functions} from '@app/helpers/functions';
-import {MatTabGroup} from '@angular/material/tabs';
-import {HttpResponse} from "@angular/common/http";
-
-// todo import { TranslateService } from '@ngx-translate/core';
+import { AgentsubService } from '@app/services/agentsub.service';
+import { Functions } from '@app/helpers/functions';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
     selector: 'app-tab-hepsub',
@@ -43,14 +40,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
               title: agentCdr.node
           });
 
-          console.log('TabHepsubComponent dataItem - agentCdr:', agentCdr)
-
-          // todo do we need this sub data object?
-          //agentCdr.data.data = Functions.JSON_parse(agentCdr.data) || agentCdr.data;
           agentCdr.data.data = Functions.JSON_parse(agentCdr.data) || agentCdr.data;
-
-          console.log('TabHepsubComponent dataItem - agentCdr.data:', agentCdr.data)
-          console.log('TabHepsubComponent dataItem - agentCdr.data.data:', agentCdr.data.data)
 
           this.jsonData = agentCdr.data;
 
@@ -74,22 +64,17 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     isLogs = true;
     subTabList = [];
     jsonData: any;
-    timestamp: any; // PCAP timestamp
-    timestampString: string; // PCAP timestamp
+    timestamp: any; // PCAP timestamp (unix time)
+    timestampString: string; // PCAP timestamp (UTC string)
     agentPathPcap: string;
     agentNode: string;
     agentUuid: string;
     _interval: any;
     constructor(
       private cdr: ChangeDetectorRef,
-      private _ass: AgentsubService,
-      // todo public translateService: TranslateService,
-      ) {
-      // todo translateService.addLangs(['en'])
-      // todo translateService.setDefaultLang('en')
+      private _ass: AgentsubService
+    ) { }
 
-
-    }
     ngAfterViewInit() {
         setTimeout(() => {
             this.ready.emit({});
@@ -102,13 +87,9 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
             this.cdr.detectChanges();
         }, 2000);
 
-      console.log('TabHepsubComponent ngOnInit - jsonData:', this.jsonData)
-
       this.agentPathPcap = this.jsonData[this.callid].pcap || 'not_set';
       this.timestamp = this.jsonData[this.callid].t_sec * 1000 || 0;
       this.timestampString = new Date(this.timestamp ).toUTCString();
-
-      console.log('TabHepsubComponent ngOnInit - agentPathPcap:', this.agentPathPcap, 'timestamp:', this.timestamp, 'timestampString:', this.timestampString)
     }
 
     ngOnDestroy() {
@@ -118,17 +99,13 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
   async getPcap() {
-    console.log('pcap download request, jsonData:', this.jsonData)
-
     const request = this.getRequest()
-
-    console.log('pcap download request, request:', request)
 
     try {
       const blob = await this._ass.getHepsubElements({
         uuid: this.agentUuid,
         type: "download",
-        data: request, //this.jsonData
+        data: request,
       }).toPromise();
 
       // move to function seek other downloads
@@ -144,18 +121,19 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  // generate request as expected by AgentsubService
   private getRequest() {
     return {
         param: {
-          location: {node: ["local"]}, // todo might be better as node name? copied from pcap search query
+          location: {node: ["local"]},
           search: {
             ['1_call']: {
-              id: 0, // todo we don't have this ID here - where is it from?
-              ['callid']: [this.callid], // possibly not needed
-              ['sid']: [this.callid], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
-              ['source_ip']: [], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
-              ['pcap']: [this.agentPathPcap], // needed for download (could just load at remote..)
-              ['__hep__']: [this.jsonData[this.callid].__hep__], // provide token and filename needed for download
+              id: 0,
+              ['callid']: [this.callid],
+              ['sid']: [this.callid],
+              ['source_ip']: [],
+              ['pcap']: [this.agentPathPcap],
+              ['__hep__']: [this.jsonData[this.callid].__hep__],
             }
           },
           transaction: {
@@ -164,11 +142,10 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
             rest: false,
           }
         },
-        timestamp: { // todo these not really used, just implementing for testing
+        timestamp: {
           from: this.timestamp,
           to: this.timestamp,
         }
       };
-
   }
 }
