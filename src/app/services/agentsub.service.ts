@@ -34,10 +34,11 @@ export class AgentsubService {
    */
   getHepsubElements({uuid, type, data}): Observable<any> {
     // todo consider returning .toPromise() as per call.service
+    let options;
     if (type === 'download') {
-      return this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data,  {responseType: 'blob' as 'json'});
+      options = {responseType: 'blob' as 'json'};
     }
-    return this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data);
+    return this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data, options);
   }
 
   // type = 'cdr' | 'wav' | 'json'
