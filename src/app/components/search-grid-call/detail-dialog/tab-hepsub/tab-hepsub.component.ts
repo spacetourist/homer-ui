@@ -125,19 +125,13 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('pcap download request, request:', request)
 
     try {
-      // const blob = await this._ass.getHepsubFile({
-      //   uuid: this.agentUuid,
-      //   type: "download",
-      //   data: request, //this.jsonData
-      // });
-
-      console.log('using getHepsubElements')
       const blob = await this._ass.getHepsubElements({
         uuid: this.agentUuid,
         type: "download",
         data: request, //this.jsonData
       }).toPromise();
 
+      // move to function seek other downloads
       const timestamp = Functions.getTimestamp();
       const fName = `homer-rtp__${this.callid}__${timestamp}.pcap`;
 
@@ -159,7 +153,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
               id: 0, // todo we don't have this ID here - where is it from?
               ['callid']: [this.callid], // possibly not needed
               ['sid']: [this.callid], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
-              ['source_ip']: ["1.1.1.1"], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
+              ['source_ip']: [], // defined because AgentsubService.DoSearchByPost expects it (superfluous?)
               ['pcap']: [this.agentPathPcap], // needed for download (could just load at remote..)
               ['__hep__']: [this.jsonData[this.callid].__hep__], // provide token and filename needed for download
             }

@@ -40,11 +40,6 @@ export class AgentsubService {
     return this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data);
   }
 
-  async getHepsubFile({uuid, type, data}): Promise<Blob> {
-    // todo do we need await here too?
-    return await this.http.post<Blob>(`${this.url}/search/${uuid}/${type}`, data,  {responseType: 'blob' as 'json'}).toPromise();
-  }
-
   // type = 'cdr' | 'wav' | 'json'
   getType(type: string): Observable<any> {
     return this.http.get<any>(`${this.url}/type/${type}`);
