@@ -37,7 +37,7 @@ export class AgentsubService {
     if (type === 'download') {
       return this.http.post<Blob>(`${this.url}/search/${uuid}/${type}`, data, {
         observe: 'response',
-        headers: new HttpHeaders().append('Content-Type', 'application/octect-stream')
+        headers: new HttpHeaders().append('Content-Type', 'application/octet-stream')
       });
     }
     return this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data);
