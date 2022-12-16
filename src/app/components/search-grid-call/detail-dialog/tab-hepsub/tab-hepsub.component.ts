@@ -131,7 +131,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
       type: "download",
       data: request, //this.jsonData
     }).subscribe(
-      (data: HttpResponse<Blob>) => {
+      (data: HttpResponse<any>) => {
         const { headers, body }: { headers: any, body: Blob } = data;
         const fName = headers.get('content-disposition') || PREFIX + this.callid + `-${(new Date()).toISOString()}.pcap`;
 
