@@ -126,7 +126,7 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
     console.log('pcap download request, request:', request)
 
-    const blob = this._ass.getHepsubFile({
+    const blob = await this._ass.getHepsubFile({
       uuid: this.agentUuid,
       type: "download",
       data: request, //this.jsonData
