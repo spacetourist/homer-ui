@@ -126,19 +126,23 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
     console.log('pcap download request, request:', request)
 
-    const data: HttpResponse<Blob> = await this._ass.getHepsubElements({
+    this._ass.getHepsubElements({
       uuid: this.agentUuid,
       type: "download",
       data: request, //this.jsonData
-    }).toPromise();
+    }).subscribe(
+      (data: HttpResponse<Blob>) => {
+        const { headers, body }: { headers: any, body: Blob } = data;
+        const fName = headers.get('content-disposition') || PREFIX + this.callid + `-${(new Date()).toISOString()}.pcap`;
 
-    const { headers, body }: { headers: any, body: Blob } = data;
-    const fName = headers.get('content-disposition') ||
-      PREFIX + this.callid + `-${(new Date()).toISOString()}.pcap`;
-
-    console.log('pcap download response, saving to file:', fName)
-
-    Functions.saveToFile(<Blob>body, fName);
+        console.log('pcap download response, saving to file:', fName)
+        Functions.saveToFile(<Blob>body, fName);
+      },
+      (err) => {
+        alert("Problem while downloading the file.");
+        console.error(err);
+      }
+    );
   }
 
   private getRequest() {
