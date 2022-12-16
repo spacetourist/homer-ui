@@ -13,6 +13,7 @@ import {
 import {AgentsubService} from '@app/services/agentsub.service';
 import {Functions} from '@app/helpers/functions';
 import {MatTabGroup} from '@angular/material/tabs';
+import {HttpResponse} from "@angular/common/http";
 
 // todo import { TranslateService } from '@ngx-translate/core';
 
@@ -125,15 +126,19 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
 
     console.log('pcap download request, request:', request)
 
-    const data = await this._ass.getHepsubElements({
+    const data: HttpResponse<Blob> = await this._ass.getHepsubElements({
       uuid: this.agentUuid,
       type: "download",
       data: request, //this.jsonData
     }).toPromise();
 
-    console.log('pcap download request, response:', data)
+    const { headers, body }: { headers: any, body: Blob } = data;
+    const fName = headers.get('content-disposition') ||
+      PREFIX + this.callid + `-${(new Date()).toISOString()}.pcap`;
 
-    Functions.saveToFile(data, PREFIX + this.id + '.pcap');
+    console.log('pcap download response, saving to file:', fName)
+
+    Functions.saveToFile(<Blob>body, fName);
   }
 
   private getRequest() {

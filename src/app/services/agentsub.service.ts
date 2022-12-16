@@ -35,22 +35,10 @@ export class AgentsubService {
   getHepsubElements({uuid, type, data}): Observable<any> {
     // todo consider returning .toPromise() as per call.service
     if (type === 'download') {
-      const res = this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data).subscribe(
-        (response: any) =>{
-          let filename = 'homer_rtp.pcap';
-          let dataType = response.type;
-          let binaryData = [];
-          binaryData.push(response);
-          let downloadLink = document.createElement('a');
-          downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
-          if (filename) {
-            downloadLink.setAttribute('download', filename);
-          }
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          return res;
-        }
-      );
+      return this.http.post<Blob>(`${this.url}/search/${uuid}/${type}`, data, {
+        observe: 'response',
+        headers: new HttpHeaders().append('Content-Type', 'application/octect-stream')
+      });
     }
     return this.http.post<any>(`${this.url}/search/${uuid}/${type}`, data);
   }
