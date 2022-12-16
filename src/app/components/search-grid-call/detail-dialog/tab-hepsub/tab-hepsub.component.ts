@@ -120,41 +120,28 @@ export class TabHepsubComponent implements OnInit, OnDestroy, AfterViewInit {
   async getPcap() {
     console.log('pcap download request, jsonData:', this.jsonData)
 
-    const PREFIX = 'homer_rtp_';
-
     const request = this.getRequest()
 
     console.log('pcap download request, request:', request)
 
-    const blob = await this._ass.getHepsubFile({
-      uuid: this.agentUuid,
-      type: "download",
-      data: request, //this.jsonData
-    });
+    try {
+      const blob = await this._ass.getHepsubFile({
+        uuid: this.agentUuid,
+        type: "download",
+        data: request, //this.jsonData
+      });
 
-    const fName = PREFIX + this.callid + `-${(new Date()).toISOString()}.pcap`;
+      // produce a timestamped filename
+      const timestamp = Functions.getTimestamp();
+      const fName = `homer_rtp__${this.callid}__${timestamp}.pcap`;
 
-    console.log('pcap download response, saving to file:', fName)
-    Functions.saveToFile(blob, fName);
-
-    //
-    // this._ass.getHepsubElements({
-    //   uuid: this.agentUuid,
-    //   type: "download",
-    //   data: request, //this.jsonData
-    // }).subscribe(
-    //   (data: HttpResponse<Blob>) => {
-    //     const { headers, body }: { headers: any, body: Blob } = data;
-    //     const fName = headers.get('content-disposition') || PREFIX + this.callid + `-${(new Date()).toISOString()}.pcap`;
-    //
-    //     console.log('pcap download response, saving to file:', fName)
-    //     Functions.saveToFile(<Blob>body, fName);
-    //   },
-    //   (err) => {
-    //     alert("Problem while downloading the file.");
-    //     console.error(err);
-    //   }
-    // );
+      console.log('pcap download response, saving to file:', fName)
+      Functions.saveToFile(blob, fName);
+    } catch (err) {
+      console.error('PCAP download error:', err);
+      alert('Problem while downloading the file');
+      return;
+    }
   }
 
   private getRequest() {
